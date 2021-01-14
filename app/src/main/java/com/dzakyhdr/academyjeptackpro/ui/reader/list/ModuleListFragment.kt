@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderActivity
 import com.dzakyhdr.academyjeptackpro.R
 import com.dzakyhdr.academyjeptackpro.data.ModuleEntity
+import com.dzakyhdr.academyjeptackpro.ui.academy.viewmodel.ViewModelFactory
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderCallback
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderViewModel
 import com.dzakyhdr.academyjeptackpro.utils.DataDummy
@@ -30,15 +31,21 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
     private lateinit var courseReaderCallback: CourseReaderCallback
     private lateinit var viewModel: CourseReaderViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_module_list, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory())[CourseReaderViewModel::class.java]
+        val factory = ViewModelFactory.getInstance(requireActivity())
+        viewModel = ViewModelProvider(
+            requireActivity(), factory
+        )[CourseReaderViewModel::class.java]
+
         adapter = ModuleListAdapter(this)
         populateRecyclerView(viewModel.getModules())
     }
@@ -59,7 +66,8 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
         rv_module.layoutManager = LinearLayoutManager(context)
         rv_module.setHasFixedSize(true)
         rv_module.adapter = adapter
-        val dividerItemDecoration = DividerItemDecoration(rv_module.context, DividerItemDecoration.VERTICAL)
+        val dividerItemDecoration =
+            DividerItemDecoration(rv_module.context, DividerItemDecoration.VERTICAL)
         rv_module.addItemDecoration(dividerItemDecoration)
     }
 }

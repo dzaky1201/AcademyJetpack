@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dzakyhdr.academyjeptackpro.R
 import com.dzakyhdr.academyjeptackpro.data.CourseEntity
 import com.dzakyhdr.academyjeptackpro.databinding.FragmentBookmarkBinding
+import com.dzakyhdr.academyjeptackpro.ui.academy.viewmodel.ViewModelFactory
 import com.dzakyhdr.academyjeptackpro.utils.DataDummy
 import kotlinx.android.synthetic.main.fragment_bookmark.*
 
@@ -28,7 +29,8 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null){
-            val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[BookmarkViewModel::class.java]
+            val factory = ViewModelFactory.getInstance(requireActivity())
+            val viewModel = ViewModelProvider(this, factory)[BookmarkViewModel::class.java]
             val course = viewModel.getBookmarks()
 
             val adapter = BookmarkAdapter(this)

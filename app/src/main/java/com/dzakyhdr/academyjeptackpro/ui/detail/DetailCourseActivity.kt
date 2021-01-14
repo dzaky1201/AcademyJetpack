@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderActivity
 import com.dzakyhdr.academyjeptackpro.R
 import com.dzakyhdr.academyjeptackpro.data.CourseEntity
+import com.dzakyhdr.academyjeptackpro.ui.academy.viewmodel.ViewModelFactory
 import com.dzakyhdr.academyjeptackpro.utils.DataDummy
 import kotlinx.android.synthetic.main.activity_detail_course.*
 import kotlinx.android.synthetic.main.content_detail_course.*
@@ -27,7 +28,8 @@ class DetailCourseActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[DetailCourseViewModel::class.java]
+        val factory = ViewModelFactory.getInstance(this)
+        val viewModel = ViewModelProvider(this,factory)[DetailCourseViewModel::class.java]
         val adapter = DetailCourseAdapter()
 
         val extras = intent.extras

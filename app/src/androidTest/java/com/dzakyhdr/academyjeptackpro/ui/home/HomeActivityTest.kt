@@ -5,7 +5,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import com.dzakyhdr.academyjeptackpro.R
@@ -34,7 +33,7 @@ class HomeActivityTest{
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
         onView(withId(R.id.text_title)).check(matches(withText(dummyCourse[0].title)))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_date)).check(matches(ViewMatchers.withText("Deadline ${dummyCourse[0].deadline}")))
+        onView(withId(R.id.text_date)).check(matches(withText("Deadline ${dummyCourse[0].deadline}")))
     }
     @Test
     fun loadModule() {
