@@ -6,5 +6,5 @@ import com.dzakyhdr.academyjeptackpro.data.source.AcademyRepository
 import com.dzakyhdr.academyjeptackpro.utils.DataDummy
 
 class BookmarkViewModel(private val academyRepository: AcademyRepository): ViewModel() {
-    fun getBookmarks(): List<CourseEntity> = academyRepository.getAllCourses()
+    fun getBookmarks(): List<CourseEntity> = academyRepository.getBookmarkedCourses()
 }
