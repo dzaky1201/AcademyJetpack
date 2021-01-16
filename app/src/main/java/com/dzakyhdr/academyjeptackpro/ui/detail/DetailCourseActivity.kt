@@ -2,6 +2,7 @@ package com.dzakyhdr.academyjeptackpro.ui.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -11,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderActivity
 import com.dzakyhdr.academyjeptackpro.R
 import com.dzakyhdr.academyjeptackpro.data.CourseEntity
+import com.dzakyhdr.academyjeptackpro.databinding.ActivityDetailCourseBinding
 import com.dzakyhdr.academyjeptackpro.ui.academy.viewmodel.ViewModelFactory
 import com.dzakyhdr.academyjeptackpro.utils.DataDummy
 import kotlinx.android.synthetic.main.activity_detail_course.*
@@ -22,24 +24,38 @@ class DetailCourseActivity : AppCompatActivity() {
         const val EXTRA_COURSE = "extra_course"
     }
 
+    private lateinit var binding: ActivityDetailCourseBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_course)
+        binding = ActivityDetailCourseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val factory = ViewModelFactory.getInstance(this)
-        val viewModel = ViewModelProvider(this,factory)[DetailCourseViewModel::class.java]
+        val viewModel = ViewModelProvider(this, factory)[DetailCourseViewModel::class.java]
         val adapter = DetailCourseAdapter()
 
         val extras = intent.extras
         if (extras != null) {
             val courseId = extras.getString(EXTRA_COURSE)
             if (courseId != null) {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.content.visibility = View.INVISIBLE
+
                 viewModel.setSelectedCourse(courseId)
-                val modules = viewModel.getModules()
-                adapter.setModules(modules)
-                populateCourse(viewModel.getCourse())
+                viewModel.getModules().observe(this, { modules ->
+                    binding.progressBar.visibility = View.GONE
+                    binding.content.visibility = View.VISIBLE
+
+                    adapter.setModules(modules)
+                    adapter.notifyDataSetChanged()
+
+                })
+
+                viewModel.getCourse().observe(this,{course ->  populateCourse(course)})
+
             }
         }
 
@@ -48,7 +64,8 @@ class DetailCourseActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@DetailCourseActivity)
             setHasFixedSize(true)
             this.adapter = adapter
-            val dividerItemDecoration = DividerItemDecoration(rv_module.context, DividerItemDecoration.VERTICAL)
+            val dividerItemDecoration =
+                DividerItemDecoration(rv_module.context, DividerItemDecoration.VERTICAL)
             addItemDecoration(dividerItemDecoration)
         }
     }
@@ -60,8 +77,10 @@ class DetailCourseActivity : AppCompatActivity() {
 
         Glide.with(this)
             .load(courseEntity.imagePath)
-            .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
-                .error(R.drawable.ic_error))
+            .apply(
+                RequestOptions.placeholderOf(R.drawable.ic_loading)
+                    .error(R.drawable.ic_error)
+            )
             .into(image_poster)
 
         btn_start.setOnClickListener {

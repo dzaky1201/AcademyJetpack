@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderActivity
 import com.dzakyhdr.academyjeptackpro.R
 import com.dzakyhdr.academyjeptackpro.data.ModuleEntity
+import com.dzakyhdr.academyjeptackpro.databinding.FragmentModuleListBinding
 import com.dzakyhdr.academyjeptackpro.ui.academy.viewmodel.ViewModelFactory
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderCallback
 import com.dzakyhdr.academyjeptackpro.ui.reader.CourseReaderViewModel
@@ -30,13 +31,14 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
     private lateinit var adapter: ModuleListAdapter
     private lateinit var courseReaderCallback: CourseReaderCallback
     private lateinit var viewModel: CourseReaderViewModel
+    private lateinit var binding: FragmentModuleListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_module_list, container, false)
+        binding = FragmentModuleListBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -47,7 +49,12 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
         )[CourseReaderViewModel::class.java]
 
         adapter = ModuleListAdapter(this)
-        populateRecyclerView(viewModel.getModules())
+
+        binding.progressBar.visibility = View.VISIBLE
+        viewModel.getModules().observe(viewLifecycleOwner, { modules ->
+            binding.progressBar.visibility = View.GONE
+            populateRecyclerView(modules)
+        })
     }
 
     override fun onAttach(context: Context) {

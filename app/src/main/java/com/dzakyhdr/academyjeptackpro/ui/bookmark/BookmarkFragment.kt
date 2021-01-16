@@ -28,15 +28,20 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (activity != null){
+        if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[BookmarkViewModel::class.java]
-            val course = viewModel.getBookmarks()
 
             val adapter = BookmarkAdapter(this)
-            adapter.setCourses(course)
+            binding.progressBar.visibility = View.VISIBLE
+            viewModel.getBookmarks().observe(viewLifecycleOwner, { response ->
+                binding.progressBar.visibility = View.GONE
+                adapter.setCourses(response)
+                adapter.notifyDataSetChanged()
+            })
 
-            with(binding.rvBookmark){
+
+            with(binding.rvBookmark) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
                 this.adapter = adapter
@@ -47,7 +52,7 @@ class BookmarkFragment : Fragment(), BookmarkFragmentCallback {
     }
 
     override fun onShareClick(course: CourseEntity) {
-        if (activity != null){
+        if (activity != null) {
             val mimeType = "text/plain"
             ShareCompat.IntentBuilder.from(requireActivity()).apply {
                 setType(mimeType)

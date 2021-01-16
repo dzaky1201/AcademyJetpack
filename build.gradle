@@ -24,6 +24,7 @@ ext {
     archLifecycleVersion = '2.1.0'
     androidXTestVersion = '1.2.0'
     mockitoVersion = '3.6.0'
+    mockitoKotlinVersion = '2.2.0'
     materialVersion = '1.0.0'
     recyclerViewVersion = '1.1.0'
     glideVersion = '4.10.0'
