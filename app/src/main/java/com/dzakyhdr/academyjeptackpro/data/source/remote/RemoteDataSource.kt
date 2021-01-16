@@ -4,7 +4,9 @@ import android.os.Handler
 import com.dzakyhdr.academyjeptackpro.data.source.remote.response.ContentResponse
 import com.dzakyhdr.academyjeptackpro.data.source.remote.response.CourseResponse
 import com.dzakyhdr.academyjeptackpro.data.source.remote.response.ModuleResponse
+import com.dzakyhdr.academyjeptackpro.utils.EspressoIdlingResource
 import com.dzakyhdr.academyjeptackpro.utils.JsonHelper
+import kotlin.math.E
 
 class RemoteDataSource private constructor(private val jsonHelper: JsonHelper) {
 
@@ -24,15 +26,24 @@ class RemoteDataSource private constructor(private val jsonHelper: JsonHelper) {
     }
 
     fun getAllCourses(callback: LoadCoursesCallback) {
-        handler.postDelayed({callback.onAllCourseReceived(jsonHelper.loadCourse())}, SERVICE_LATENCY_IN_MILLIS)
+        EspressoIdlingResource.increment()
+        handler.postDelayed({callback.onAllCourseReceived(jsonHelper.loadCourse())
+            EspressoIdlingResource.decrement()
+        }, SERVICE_LATENCY_IN_MILLIS)
     }
 
     fun getModules(courseId: String, callback: LoadModulesCallback) {
-        handler.postDelayed({callback.onAllModulesReceived(jsonHelper.loadModule(courseId))}, SERVICE_LATENCY_IN_MILLIS)
+        EspressoIdlingResource.increment()
+        handler.postDelayed({callback.onAllModulesReceived(jsonHelper.loadModule(courseId))
+            EspressoIdlingResource.decrement()
+        }, SERVICE_LATENCY_IN_MILLIS)
     }
 
     fun getContent(moduleId: String, callback: LoadContentCallback) {
-        handler.postDelayed({callback.onContentReceived(jsonHelper.loadContent(moduleId))}, SERVICE_LATENCY_IN_MILLIS)
+        EspressoIdlingResource.increment()
+        handler.postDelayed({callback.onContentReceived(jsonHelper.loadContent(moduleId))
+        EspressoIdlingResource.decrement()
+        }, SERVICE_LATENCY_IN_MILLIS)
     }
 
     interface LoadCoursesCallback {

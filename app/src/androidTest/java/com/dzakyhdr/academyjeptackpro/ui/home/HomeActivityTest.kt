@@ -1,7 +1,9 @@
 package com.dzakyhdr.academyjeptackpro.ui.home
 
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -9,7 +11,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import com.dzakyhdr.academyjeptackpro.R
 import com.dzakyhdr.academyjeptackpro.utils.DataDummy
+import com.dzakyhdr.academyjeptackpro.utils.EspressoIdlingResource
+import org.junit.After
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -18,6 +23,17 @@ class HomeActivityTest{
 
     @get:Rule
     var activityRule = ActivityTestRule(HomeActivity::class.java)
+
+    @Before
+    fun setUp(){
+        ActivityScenario.launch(HomeActivity::class.java)
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
+    }
+
+    @After
+    fun tearDown(){
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.espressoTestIdlingResource)
+    }
 
     @Test
     fun loadCourse(){
